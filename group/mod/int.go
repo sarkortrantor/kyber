@@ -90,7 +90,7 @@ func (i *Int) Init64(v int64, m *big.Int) *Int {
 	return i
 }
 
-// InitBytes init the Int to a number represented in a big-endian byte string.
+// InitBytes init the Int to a number represented in a byte string whose endianess is specified by byteOrder.
 func (i *Int) InitBytes(a []byte, m *big.Int, byteOrder ByteOrder) *Int {
 	i.M = m
 	i.BO = byteOrder
