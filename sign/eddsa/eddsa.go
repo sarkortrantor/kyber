@@ -29,11 +29,13 @@ type EdDSA struct {
 
 // NewEdDSA will return a freshly generated key pair to use for generating
 // EdDSA signatures.
+// FIXME unusable cannot sign with preexising private key, + use curve.newKey instead of these...
 func NewEdDSA(stream cipher.Stream) *EdDSA {
 	if stream == nil {
 		panic("stream is required")
 	}
 	var buffer [32]byte
+	// FIXME use newKey instead
 	random.Bytes(buffer[:], stream)
 
 	scalar := hashSeed(buffer[:])
@@ -78,6 +80,8 @@ func (e *EdDSA) UnmarshalBinary(buff []byte) error {
 }
 
 // Sign will return a EdDSA signature of the message msg using Ed25519.
+// TODO FIXME to me this is wrong to return []byte => leave the choice to caller to marshall later
+// a signature is just a pair (R kyber.Point, s kyber.Scalar)
 func (e *EdDSA) Sign(msg []byte) ([]byte, error) {
 	hash := sha512.New()
 	_, _ = hash.Write(e.prefix)
@@ -125,6 +129,7 @@ func (e *EdDSA) Sign(msg []byte) ([]byte, error) {
 
 // Verify uses a public key, a message and a signature. It will return nil if
 // sig is a valid signature for msg created by key public, or an error otherwise.
+// TODO/ FIXME same remark as above, IMHO wrong to define a sig as []byte, only here it is plain obvious since the first step undertaken is unmarshall it.....
 func Verify(public kyber.Point, msg, sig []byte) error {
 	if len(sig) != 64 {
 		return fmt.Errorf("signature length invalid, expect 64 but got %v", len(sig))
@@ -162,6 +167,8 @@ func Verify(public kyber.Point, msg, sig []byte) error {
 	return nil
 }
 
+
+// FIXME remove and use newKey() instead, edwards25519.Curve implements the keygenerator interface !
 func hashSeed(seed []byte) (hash [64]byte) {
 	hash = sha512.Sum512(seed)
 	hash[0] &= 0xf8

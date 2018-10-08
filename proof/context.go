@@ -35,6 +35,9 @@ type Verifier func(ctx VerifierContext) error
 //
 type ProverContext interface {
 	Put(message interface{}) error        // Send message to verifier
+	// FIXME bad API design IMHO why have a single Put for kind of multiple purposes (sending commits/points and responses/scalars and subchallenges []Scalar) ?
+	// or at least provide wrappers here that do the heavy lifting type assertions etc..
+	// or better documentation and examples/use cases
 	PubRand(message ...interface{}) error // Get public randomness
 	PriRand(message ...interface{}) error // Get private randomness
 }

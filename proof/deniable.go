@@ -8,18 +8,6 @@ import (
 	"github.com/dedis/kyber"
 )
 
-// FIXME usability, lacks a README on how to reuse it, scenarios where it is suitable, etc..
-// + IMHO would be better and simpler to rewrite user-facing part of proof framwework in a CPS style
-// to avoid things like proofstep and challenge step, where Put only save the commits in a slice
-// and Pubrand then whait on proofstep (who will get the commits in the slice and transmit them) to actually request/receive the challenges...
-// seems kind of ... and complicated to me..
-// if instead Put (and Pubrand and.. etc.) is designed to accept a continuation/higher-order function to call at the end
-// of its work then, user code can do proofstep in Put, more logical.
-// + looks like deniableprover is more a proof of concept than a thing we can reuse to build other protocols and services
-// then why not rewrite it to make it reusable or label it as such and introduce another prover/verifier_context that is reusable
-// if we look at the deniable_test example of usage we are
-// facing (kind of) the 3rd wrapper around the proof framework, => to me another sign something has to change
-
 // DeniableProver is a Protocol implementing an interactive Sigma-protocol
 // to prove a particular statement to the other participants.
 // Optionally the Protocol participant can also verify
